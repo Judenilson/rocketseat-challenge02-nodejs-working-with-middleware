@@ -24,7 +24,22 @@ function checksExistsUserAccount(request, response, next) {
 }
 
 function checksCreateTodosUserAvailability(request, response, next) {
-  // Complete aqui
+  const { user } = request;
+
+  let todosTotal = 1;
+  for (let i of user.todos) {
+    todosTotal++;
+  }
+  
+  if (user.pro){
+    return next()
+  }  
+  if (todosTotal < 10){
+    return next()
+  }
+  
+  return response.status(404).json({ error: "This user is not Pro and have 10 todos!"})
+
 }
 
 function checksTodoExists(request, response, next) {
