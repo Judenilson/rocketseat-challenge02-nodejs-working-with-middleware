@@ -14,8 +14,8 @@ function checksExistsUserAccount(request, response, next) {
 
   const user = users.find((users) => users.username === username);
 
-  if (!user){
-    return response.status(404).json({ error: "user not found!"});
+  if (!user) {
+    return response.status(404).json({ error: "user not found!" });
   }
 
   request.user = user;
@@ -30,33 +30,34 @@ function checksCreateTodosUserAvailability(request, response, next) {
   for (let i of user.todos) {
     todosTotal++;
   }
-  
-  if (user.pro){
-    return next()
-  }  
-  if (todosTotal < 10){
-    return next()
-  }
-  
-  return response.status(404).json({ error: "This user is not Pro and have 10 todos!"})
 
+  if (user.pro) {
+    return next();
+  }
+  if (todosTotal < 10) {
+    return next();
+  }
+
+  return response
+    .status(403)
+    .json({ error: "This user is not Pro and have 10 todos!" });
 }
 
 function checksTodoExists(request, response, next) {
   const { username } = request.headers;
   const { id } = request.params;
 
-  const user = users.find((users)=> users.username === username);
-  if (!user){
+  const user = users.find((users) => users.username === username);
+  if (!user) {
     return response.status(404);
   }
 
-  if (!validate(id)){
+  if (!validate(id)) {
     return response.status(400);
   }
 
-  const todo = user.find((user)=> user.todos.id == id);
-  if (!todo){
+  const todo = user.find((user) => user.todos.id == id);
+  if (!todo) {
     return response.status(404);
   }
 
@@ -67,7 +68,17 @@ function checksTodoExists(request, response, next) {
 }
 
 function findUserById(request, response, next) {
-  // Complete aqui
+  const { id } = request.params;
+
+  const user = users.find((users) => users.id === id);
+
+  if (!user){
+    return response.status(404);
+  }
+
+  request.user = user;
+
+  next();
 }
 
 app.post("/users", (request, response) => {
