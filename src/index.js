@@ -49,16 +49,16 @@ function checksTodoExists(request, response, next) {
 
   const user = users.find((users) => users.username === username);
   if (!user) {
-    return response.status(404);
+    return response.status(404).json({ error: "User not found!" });
   }
 
   if (!validate(id)) {
-    return response.status(400);
+    return response.status(400).json({ error: "ID not UUID!" });
   }
 
-  const todo = user.find((user) => user.todos.id == id);
+  const todo = user.todos.find((todos) => todos.id === id);
   if (!todo) {
-    return response.status(404);
+    return response.status(404).json({ error: "Todo not found!" });
   }
 
   request.user = user;
@@ -72,8 +72,8 @@ function findUserById(request, response, next) {
 
   const user = users.find((users) => users.id === id);
 
-  if (!user){
-    return response.status(404);
+  if (!user) {
+    return response.status(404).json({ error: "User not found!" });
   }
 
   request.user = user;
